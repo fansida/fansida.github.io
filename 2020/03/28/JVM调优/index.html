@@ -6,19 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | Star的博客</title>
+  <title>JVM调优 | Star的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Star的博客">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="JVM调优@(关键词)[jvm|调优|java]##基本概念： JVM把内存区分为堆区(heap)、栈区(stack)和方法区(method)。由于本文主要讲解JVM调优，因此我们可以简单的理解为，JVM中的堆区中存放的是实际的对象，是需要被GC的。其他的都无需GC。  从图中我们可以看到   JVM实质上分为三大块，年轻代(YoungGen)，年老代(Old Memory)，及持久代(Perm，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM调优">
+<meta property="og:url" content="http://yoursite.com/2020/03/28/JVM%E8%B0%83%E4%BC%98/index.html">
 <meta property="og:site_name" content="Star的博客">
+<meta property="og:description" content="JVM调优@(关键词)[jvm|调优|java]##基本概念： JVM把内存区分为堆区(heap)、栈区(stack)和方法区(method)。由于本文主要讲解JVM调优，因此我们可以简单的理解为，JVM中的堆区中存放的是实际的对象，是需要被GC的。其他的都无需GC。  从图中我们可以看到   JVM实质上分为三大块，年轻代(YoungGen)，年老代(Old Memory)，及持久代(Perm，">
 <meta property="og:locale" content="cn">
+<meta property="og:image" content="https://imgconvert.csdnimg.cn/aHR0cDovL3AzLnBzdGF0cC5jb20vbGFyZ2UvcGdjLWltYWdlLzJmNjdmYzQzMWE5NzQ4ODk5OWNiNWNlMzQ4ZjNjMzA5">
+<meta property="article:published_time" content="2020-03-28T08:12:36.000Z">
+<meta property="article:modified_time" content="2020-03-28T08:37:06.091Z">
 <meta property="article:author" content="范思达">
 <meta property="article:tag" content="’开发者">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="编程">
 <meta property="article:tag" content="java‘">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://imgconvert.csdnimg.cn/aHR0cDovL3AzLnBzdGF0cC5jb20vbGFyZ2UvcGdjLWltYWdlLzJmNjdmYzQzMWE5NzQ4ODk5OWNiNWNlMzQ4ZjNjMzA5">
   
     <link rel="alternative" href="/atom.xml" title="Star的博客" type="application/atom+xml">
   
@@ -158,114 +164,190 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-JVM调优" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/28/hello-world/" class="archive-article-date">
-  	<time datetime="2020-03-28T08:40:00.354Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-28</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/28/hello-world/">Hello World</a>
+    <h1 class="article-title" itemprop="name">
+      JVM调优
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">-hexo</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/28/test/" class="archive-article-date">
-  	<time datetime="2020-03-28T08:37:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-28</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/28/test/">test</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/03/28/JVM%E8%B0%83%E4%BC%98/" class="archive-article-date">
+        
+        <a href="/2020/03/28/JVM%E8%B0%83%E4%BC%98/" class="archive-article-date">
   	<time datetime="2020-03-28T08:12:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-28</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/03/28/JVM%E8%B0%83%E4%BC%98/">JVM调优</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="JVM调优"><a href="#JVM调优" class="headerlink" title="JVM调优"></a>JVM调优</h1><p>@(关键词)[jvm|调优|java]<br>##基本概念：<br> JVM把内存区分为堆区(heap)、栈区(stack)和方法区(method)。由于本文主要讲解JVM调优，因此我们可以简单的理解为，JVM中的堆区中存放的是实际的对象，是需要被GC的。其他的都无需GC。</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3AzLnBzdGF0cC5jb20vbGFyZ2UvcGdjLWltYWdlLzJmNjdmYzQzMWE5NzQ4ODk5OWNiNWNlMzQ4ZjNjMzA5" alt="enter image description here"></p>
+<p>从图中我们可以看到</p>
+<blockquote>
+<ul>
+<li>JVM实质上分为三大块，年轻代(YoungGen)，年老代(Old Memory)，及持久代(Perm，在Java8中被取消，我们不做深入介绍)。</li>
+<li>垃圾回收GC，分为2种，一是Minor GC，可以可以称为YGC，即年轻代GC，当Eden区，还有一种称为Major GC，又称为FullGC。</li>
+<li>GC原理：</li>
+</ul>
+<p><em>我们可以看到年轻代包括Eden区(对象刚被new出来的时候，放到该区)，S0和S1，是幸存者1区和幸存者2区，从名字可以看出，是当发生YGC，没有被任何其他对象所引用的对象将会从内存中被清除，还被其他对象引用的则放到幸存者区。当发生多次YGC，在S0、S1区多次没有被清楚的对象，则会被移到老年代区域。当老年代区域被占满的时候，则会发送FullGC。</em></p>
+</blockquote>
+<blockquote>
+<p>无论是YGC或是FullGC，都会导致stop-the-world，即整个程序停止一些事务的处理，只有GC进程允许以进行垃圾回收，因此如果垃圾回收时间较长，部分web或socket程序，当终端连接的时候会报connetTimeOut或readTimeOut异常，</p>
+<ul>
+<li>从JVM调优的角度来看，我们应该尽量避免发生YGC或FullGC，或者使得YGC和FullGC的时间足够的短。</li>
+</ul>
+</blockquote>
+<p>##下面开始正式的JVM调优<br> JVM调优核心为调整年轻代、年老大的内存空间大小及使用GC发生器的类型等。参考以下start.sh文件内容，我们来分下：</p>
+<blockquote>
+<p>java -server -Xms4G -Xmx4G -Xmn2G -XX:SurvivorRatio=1 -XX:+UseConcMarkSweepGC -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1100 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -jar c1000k.jar&amp;</p>
+</blockquote>
+<p>这台机器是一个4G内存的机器，因此：</p>
+<p>-Xms4G 是指： JVM启动时整个堆(包括年轻代，年老代)的初始化大小。</p>
+<p>-Xmx4G 是指： JVM启动时整个堆的最大值。</p>
+<p>-Xmn2G是指：年轻代的空间大小，剩下的是年老代的空间。</p>
+<p>-XX:SurvivorRatio=1是指：年轻代空间中2个Survivor空间与Eden空间的大小比例。此处为1:1:1，算法如下：比如整个年轻代空间为2G，如果比例为1，那么2/3，则S0/S1/Eden的空间大小是同样的，为666M。</p>
+<p>该值不设置，则JDK默认为比例为8，那么是1:1:8，通过上面的算法可以得出S0/S1的大小。我们可以看到官方通过增大Eden区的大小，来减少YGC发生的次数，但有时我们发现，虽然次数减少了，但Eden区满的时候，由于占用的空间较大，导致释放缓慢，此时stop-the-world的时间较长，因此需要按照程序情况去调优</p>
+<p>-XX:+UseConcMarkSweepGC是指：使用GC的回收类型。这里是CMS类型，JDK1.7以后推荐使用+UseG1GC，被称为G1类型(或Garbage First)的回收器。</p>
+<p>经过一定时间的调优，我们基本上可以使得YGC的次数非常少，时间非常快，很长时间，数天都不会发生FGC，此时JVM的调优算是一个好的结果。</p>
+<p>在MAC电脑上可以通过jconsole调出图形化分析工具。</p>
+<p>原文链接：<a href="https://blog.csdn.net/Javazhoumou/article/details/99298624" target="_blank" rel="noopener">https://blog.csdn.net/Javazhoumou/article/details/99298624</a></p>
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/03/28/JVM%E8%B0%83%E4%BC%98/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2020/03/28/test/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          test
+        
+      </div>
+    </a>
   
   
-    </div></section>
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
 
 
           </div>
@@ -288,8 +370,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
