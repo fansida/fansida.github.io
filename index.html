@@ -61,6 +61,8 @@
 			
 				<li><a href="/">主页</a></li>
 	        
+				<li><a href="/tags">随笔</a></li>
+	        
 			</ul>
 		</nav>
 		<nav class="header-smart-menu">
@@ -117,6 +119,8 @@
 			
 				
 			
+				
+			
 			
 			
 			<nav class="header-nav">
@@ -137,7 +141,9 @@
 				<ul style="width: 50%">
 				
 				
-					<li style="width: 100%"><a href="/">主页</a></li>
+					<li style="width: 50%"><a href="/">主页</a></li>
+		        
+					<li style="width: 50%"><a href="/tags">随笔</a></li>
 		        
 				</ul>
 			</nav>
@@ -153,99 +159,6 @@
           </div>
           <div id="js-content" class="content-ll">
             
-  
-    <article id="post-JVM调优" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/28/JVM%E8%B0%83%E4%BC%98/">JVM调优</a>
-    </h1>
-  
-
-        
-        <a href="/2020/03/28/JVM%E8%B0%83%E4%BC%98/" class="archive-article-date">
-  	<time datetime="2020-03-28T08:12:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>@(关键词)[jvm|调优|java]<br>##基本概念：<br> JVM把内存区分为堆区(heap)、栈区(stack)和方法区(method)。由于本文主要讲解JVM调优，因此我们可以简单的理解为，JVM中的堆区中存放的是实际的对象，是需要被GC的。其他的都无需GC。</p>
-<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3AzLnBzdGF0cC5jb20vbGFyZ2UvcGdjLWltYWdlLzJmNjdmYzQzMWE5NzQ4ODk5OWNiNWNlMzQ4ZjNjMzA5" alt="enter image description here"></p>
-<p>从图中我们可以看到</p>
-<blockquote>
-<ul>
-<li>JVM实质上分为三大块，年轻代(YoungGen)，年老代(Old Memory)，及持久代(Perm，在Java8中被取消，我们不做深入介绍)。</li>
-<li>垃圾回收GC，分为2种，一是Minor GC，可以可以称为YGC，即年轻代GC，当Eden区，还有一种称为Major GC，又称为FullGC。</li>
-<li>GC原理：</li>
-</ul>
-<p><em>我们可以看到年轻代包括Eden区(对象刚被new出来的时候，放到该区)，S0和S1，是幸存者1区和幸存者2区，从名字可以看出，是当发生YGC，没有被任何其他对象所引用的对象将会从内存中被清除，还被其他对象引用的则放到幸存者区。当发生多次YGC，在S0、S1区多次没有被清楚的对象，则会被移到老年代区域。当老年代区域被占满的时候，则会发送FullGC。</em></p>
-</blockquote>
-<blockquote>
-<p>无论是YGC或是FullGC，都会导致stop-the-world，即整个程序停止一些事务的处理，只有GC进程允许以进行垃圾回收，因此如果垃圾回收时间较长，部分web或socket程序，当终端连接的时候会报connetTimeOut或readTimeOut异常，</p>
-<ul>
-<li>从JVM调优的角度来看，我们应该尽量避免发生YGC或FullGC，或者使得YGC和FullGC的时间足够的短。</li>
-</ul>
-</blockquote>
-<p>##下面开始正式的JVM调优<br> JVM调优核心为调整年轻代、年老大的内存空间大小及使用GC发生器的类型等。参考以下start.sh文件内容，我们来分下：</p>
-<blockquote>
-<p>java -server -Xms4G -Xmx4G -Xmn2G -XX:SurvivorRatio=1 -XX:+UseConcMarkSweepGC -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1100 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -jar c1000k.jar&amp;</p>
-</blockquote>
-<p>这台机器是一个4G内存的机器，因此：</p>
-<p>-Xms4G 是指： JVM启动时整个堆(包括年轻代，年老代)的初始化大小。</p>
-<p>-Xmx4G 是指： JVM启动时整个堆的最大值。</p>
-<p>-Xmn2G是指：年轻代的空间大小，剩下的是年老代的空间。</p>
-<p>-XX:SurvivorRatio=1是指：年轻代空间中2个Survivor空间与Eden空间的大小比例。此处为1:1:1，算法如下：比如整个年轻代空间为2G，如果比例为1，那么2/3，则S0/S1/Eden的空间大小是同样的，为666M。</p>
-<p>该值不设置，则JDK默认为比例为8，那么是1:1:8，通过上面的算法可以得出S0/S1的大小。我们可以看到官方通过增大Eden区的大小，来减少YGC发生的次数，但有时我们发现，虽然次数减少了，但Eden区满的时候，由于占用的空间较大，导致释放缓慢，此时stop-the-world的时间较长，因此需要按照程序情况去调优</p>
-<p>-XX:+UseConcMarkSweepGC是指：使用GC的回收类型。这里是CMS类型，JDK1.7以后推荐使用+UseG1GC，被称为G1类型(或Garbage First)的回收器。</p>
-<p>经过一定时间的调优，我们基本上可以使得YGC的次数非常少，时间非常快，很长时间，数天都不会发生FGC，此时JVM的调优算是一个好的结果。</p>
-<p>在MAC电脑上可以通过jconsole调出图形化分析工具。</p>
-<p>原文链接：<a href="https://blog.csdn.net/Javazhoumou/article/details/99298624" target="_blank" rel="noopener">https://blog.csdn.net/Javazhoumou/article/details/99298624</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/03/28/JVM%E8%B0%83%E4%BC%98/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
     <article id="post-test" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -318,7 +231,15 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">-HashMap -JDK8 -Java</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">HashMap</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">jdk8</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
         		</li>
       		
 		</ul>
@@ -329,6 +250,83 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/06/28/test/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-认识Netty" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/30/%E8%AE%A4%E8%AF%86Netty/">认识Netty</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/30/%E8%AE%A4%E8%AF%86Netty/" class="archive-article-date">
+  	<time datetime="2019-03-30T00:01:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">NIO</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Netty</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/30/%E8%AE%A4%E8%AF%86Netty/">展开全文 >></a>
         </p>
       
 
@@ -415,6 +413,99 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/10/24/hello-world/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JVM调优" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/26/JVM%E8%B0%83%E4%BC%98/">JVM调优</a>
+    </h1>
+  
+
+        
+        <a href="/2017/05/26/JVM%E8%B0%83%E4%BC%98/" class="archive-article-date">
+  	<time datetime="2017-05-26T04:12:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-05-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>@(关键词)[jvm|调优|java]<br>##基本概念：<br> JVM把内存区分为堆区(heap)、栈区(stack)和方法区(method)。由于本文主要讲解JVM调优，因此我们可以简单的理解为，JVM中的堆区中存放的是实际的对象，是需要被GC的。其他的都无需GC。</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3AzLnBzdGF0cC5jb20vbGFyZ2UvcGdjLWltYWdlLzJmNjdmYzQzMWE5NzQ4ODk5OWNiNWNlMzQ4ZjNjMzA5" alt="enter image description here"></p>
+<p>从图中我们可以看到</p>
+<blockquote>
+<ul>
+<li>JVM实质上分为三大块，年轻代(YoungGen)，年老代(Old Memory)，及持久代(Perm，在Java8中被取消，我们不做深入介绍)。</li>
+<li>垃圾回收GC，分为2种，一是Minor GC，可以可以称为YGC，即年轻代GC，当Eden区，还有一种称为Major GC，又称为FullGC。</li>
+<li>GC原理：</li>
+</ul>
+<p><em>我们可以看到年轻代包括Eden区(对象刚被new出来的时候，放到该区)，S0和S1，是幸存者1区和幸存者2区，从名字可以看出，是当发生YGC，没有被任何其他对象所引用的对象将会从内存中被清除，还被其他对象引用的则放到幸存者区。当发生多次YGC，在S0、S1区多次没有被清楚的对象，则会被移到老年代区域。当老年代区域被占满的时候，则会发送FullGC。</em></p>
+</blockquote>
+<blockquote>
+<p>无论是YGC或是FullGC，都会导致stop-the-world，即整个程序停止一些事务的处理，只有GC进程允许以进行垃圾回收，因此如果垃圾回收时间较长，部分web或socket程序，当终端连接的时候会报connetTimeOut或readTimeOut异常，</p>
+<ul>
+<li>从JVM调优的角度来看，我们应该尽量避免发生YGC或FullGC，或者使得YGC和FullGC的时间足够的短。</li>
+</ul>
+</blockquote>
+<p>##下面开始正式的JVM调优<br> JVM调优核心为调整年轻代、年老大的内存空间大小及使用GC发生器的类型等。参考以下start.sh文件内容，我们来分下：</p>
+<blockquote>
+<p>java -server -Xms4G -Xmx4G -Xmn2G -XX:SurvivorRatio=1 -XX:+UseConcMarkSweepGC -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1100 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -jar c1000k.jar&amp;</p>
+</blockquote>
+<p>这台机器是一个4G内存的机器，因此：</p>
+<p>-Xms4G 是指： JVM启动时整个堆(包括年轻代，年老代)的初始化大小。</p>
+<p>-Xmx4G 是指： JVM启动时整个堆的最大值。</p>
+<p>-Xmn2G是指：年轻代的空间大小，剩下的是年老代的空间。</p>
+<p>-XX:SurvivorRatio=1是指：年轻代空间中2个Survivor空间与Eden空间的大小比例。此处为1:1:1，算法如下：比如整个年轻代空间为2G，如果比例为1，那么2/3，则S0/S1/Eden的空间大小是同样的，为666M。</p>
+<p>该值不设置，则JDK默认为比例为8，那么是1:1:8，通过上面的算法可以得出S0/S1的大小。我们可以看到官方通过增大Eden区的大小，来减少YGC发生的次数，但有时我们发现，虽然次数减少了，但Eden区满的时候，由于占用的空间较大，导致释放缓慢，此时stop-the-world的时间较长，因此需要按照程序情况去调优</p>
+<p>-XX:+UseConcMarkSweepGC是指：使用GC的回收类型。这里是CMS类型，JDK1.7以后推荐使用+UseG1GC，被称为G1类型(或Garbage First)的回收器。</p>
+<p>经过一定时间的调优，我们基本上可以使得YGC的次数非常少，时间非常快，很长时间，数天都不会发生FGC，此时JVM的调优算是一个好的结果。</p>
+<p>在MAC电脑上可以通过jconsole调出图形化分析工具。</p>
+<p>原文链接：<a href="https://blog.csdn.net/Javazhoumou/article/details/99298624" target="_blank" rel="noopener">https://blog.csdn.net/Javazhoumou/article/details/99298624</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/05/26/JVM%E8%B0%83%E4%BC%98/">展开全文 >></a>
         </p>
       
 
@@ -537,11 +628,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">NIO</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Netty</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">-hexo</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">-HashMap -JDK8 -Java</a>
+                <a href="javascript:void(0)" class="js-tag color3">HashMap</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">jdk8</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
               </li>
             
             <div class="clearfix"></div>
@@ -593,27 +700,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
         <ul class="search-ul">
           
             <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接1</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接2</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接3</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接4</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接5</a>
-            </li>
-          
-            <li class="search-li">
-              <a href="http://localhost:4000/" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>友情链接6</a>
+              <a href="http://fansida.cn" target="_blank" class="search-title"><i class="icon-quo-left icon"></i>我的网站</a>
             </li>
           
         </ul>
