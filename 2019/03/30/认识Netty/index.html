@@ -8,17 +8,29 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>认识Netty | Star的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="article">
+  <meta name="description" content="什么是Netty？ Netty 是一个利用 Java 的高级网络的能力，隐藏其背后的复杂性而提供一个易于使用的 API 的客户端&#x2F;服务器框架。Netty 是一个广泛使用的 Java 网络编程框架（Netty 在 2011 年获得了Duke’s Choice Award，见https:&#x2F;&#x2F;www.java.net&#x2F;dukeschoice&#x2F;2011）。它活跃和成长于用户社区，像大型公司 Faceboo">
+<meta property="og:type" content="article">
 <meta property="og:title" content="认识Netty">
 <meta property="og:url" content="http://yoursite.com/2019/03/30/%E8%AE%A4%E8%AF%86Netty/index.html">
 <meta property="og:site_name" content="Star的博客">
+<meta property="og:description" content="什么是Netty？ Netty 是一个利用 Java 的高级网络的能力，隐藏其背后的复杂性而提供一个易于使用的 API 的客户端&#x2F;服务器框架。Netty 是一个广泛使用的 Java 网络编程框架（Netty 在 2011 年获得了Duke’s Choice Award，见https:&#x2F;&#x2F;www.java.net&#x2F;dukeschoice&#x2F;2011）。它活跃和成长于用户社区，像大型公司 Faceboo">
 <meta property="og:locale" content="cn">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1089449-546a563c9822ce16.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/548">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1089449-9eebe781fba495fd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/572">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1089449-6377fd47256970ef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/584">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1089449-78814cbb3acc30bd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/525">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190414080321260.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTE3NzA4NzU=,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1089449-014c9e07d56e4be5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/481">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1089449-50e5aa5eec7e86cc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/554">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1089449-afd9e14197e1ef11.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/751">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1089449-b1ec677f253b692a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/558">
 <meta property="article:published_time" content="2019-03-30T00:01:08.000Z">
-<meta property="article:modified_time" content="2020-03-30T01:27:47.019Z">
+<meta property="article:modified_time" content="2020-03-31T00:06:44.766Z">
 <meta property="article:author" content="范思达">
 <meta property="article:tag" content="NIO">
 <meta property="article:tag" content="Netty">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/1089449-546a563c9822ce16.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/548">
   
     <link rel="alternative" href="/atom.xml" title="Star的博客" type="application/atom+xml">
   
@@ -178,7 +190,99 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="什么是Netty？"><a href="#什么是Netty？" class="headerlink" title="什么是Netty？"></a>什么是Netty？</h1><blockquote>
+<p>Netty 是一个利用 Java 的高级网络的能力，隐藏其背后的复杂性而提供一个易于使用的 API 的客户端/服务器框架。<br>Netty 是一个广泛使用的 Java 网络编程框架（Netty 在 2011 年获得了Duke’s Choice Award，见<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fwww.java.net%2Fdukeschoice%2F2011" target="_blank" rel="noopener">https://www.java.net/dukeschoice/2011</a>）。它活跃和成长于用户社区，像大型公司 Facebook 和 Instagram 以及流行 开源项目如 Infinispan, HornetQ, Vert.x, Apache Cassandra 和 Elasticsearch 等，都利用其强大的对于网络抽象的核心代码。</p>
+</blockquote>
+<h1 id="Netty和Tomcat有什么区别？"><a href="#Netty和Tomcat有什么区别？" class="headerlink" title="Netty和Tomcat有什么区别？"></a>Netty和Tomcat有什么区别？</h1><p>Netty和Tomcat最大的区别就在于通信协议，Tomcat是基于Http协议的，他的实质是一个基于http协议的web容器，但是Netty不一样，他能通过编程自定义各种协议，因为netty能够通过codec自己来编码/解码字节流，完成类似redis访问的功能，这就是netty和tomcat最大的不同。</p>
+<p>有人说netty的性能就一定比tomcat性能高，其实不然，tomcat从6.x开始就支持了nio模式，并且后续还有APR模式——一种通过jni调用apache网络库的模式，相比于旧的bio模式，并发性能得到了很大提高，特别是APR模式，而netty是否比tomcat性能更高，则要取决于netty程序作者的技术实力了。</p>
+<blockquote>
+<p>IO与NIO</p>
+<p>1、阻塞与非阻塞</p>
+<p>阻塞与非阻塞是描述进程在访问某个资源时，数据是否准备就绪的的一种处理方式。当数据没有准备就绪时：</p>
+<ul>
+<li>阻塞：线程持续等待资源中数据准备完成，直到返回响应结果。</li>
+<li>非阻塞：线程直接返回结果，不会持续等待资源准备数据结束后才响应结果。</li>
+</ul>
+<p>2、同步与异步</p>
+<ul>
+<li><p>同步与异步是指访问数据的机制，同步一般指主动请求并等待IO操作完成的方式。</p>
+</li>
+<li><p>异步则指主动请求数据后便可以继续处理其它任务，随后等待IO操作完毕的通知。</p>
+<blockquote>
+<p>老王烧开水：<br>1、普通水壶煮水，站在旁边，主动的看水开了没有？同步的阻塞<br>2、普通水壶煮水，去干点别的事，每过一段时间去看看水开了没有，水没开就走人。 同步非阻塞<br>3、响水壶煮水，站在旁边，不会每过一段时间主动看水开了没有。如果水开了，水壶自动通知他。 异步阻塞<br>4、响水壶煮水，去干点别的事，如果水开了，水壶自动通知他。异步非阻塞</p>
+</blockquote>
+<h4 id="NIO模型"><a href="#NIO模型" class="headerlink" title="NIO模型"></a>NIO模型</h4><p>NIO（JDK1.4）模型是一种同步非阻塞IO，主要有三大核心部分：Channel(通道)，Buffer(缓冲区), Selector（多路复用器）。传统IO基于字节流和字符流进行操作，而NIO基于Channel和Buffer(缓冲区)进行操作，数据总是从通道读取到缓冲区中，或者从缓冲区写入到通道中。Selector(多路复用器)用于监听多个通道的事件（比如：连接打开，数据到达）。因此，单个线程可以监听多个数据通道。<br>NIO和传统IO（一下简称IO）之间第一个最大的区别是，IO是面向流的，NIO是面向缓冲区的。 Java IO面向流意味着每次从流中读一个或多个字节，直至读取所有字节，它们没有被缓存在任何地方。此外，它不能前后移动流中的数据。如果需要前后移动从流中读取的数据，需要先将它缓存到一个缓冲区。NIO的缓冲导向方法略有不同。数据读取到一个它稍后处理的缓冲区，需要时可在缓冲区中前后移动。这就增加了处理过程中的灵活性。但是，还需要检查是否该缓冲区中包含所有您需要处理的数据。而且，需确保当更多的数据读入缓冲区时，不要覆盖缓冲区里尚未处理的数据。<br>IO的各种流是阻塞的。这意味着，当一个线程调用read() 或 write()时，该线程被阻塞，直到有一些数据被读取，或数据完全写入。该线程在此期间不能再干任何事情了。 NIO的非阻塞模式，使一个线程从某通道发送请求读取数据，但是它仅能得到目前可用的数据，如果目前没有数据可用时，就什么都不会获取。而不是保持线程阻塞，所以直至数据变的可以读取之前，该线程可以继续做其他的事情。 非阻塞写也是如此。一个线程请求写入一些数据到某通道，但不需要等待它完全写入，这个线程同时可以去做别的事情。 线程通常将非阻塞IO的空闲时间用于在其它通道上执行IO操作，所以一个单独的线程现在可以管理多个输入和输出通道（channel）。</p>
+</li>
+</ul>
+</blockquote>
+<h1 id="为什么Netty受欢迎？"><a href="#为什么Netty受欢迎？" class="headerlink" title="为什么Netty受欢迎？"></a>为什么Netty受欢迎？</h1><p>如第一部分所述，netty是一款收到大公司青睐的框架，在我看来，netty能够受到青睐的原因有三：</p>
+<ol>
+<li><strong>并发高</strong>      同步非阻塞 单个线程可以处理多个请求适合高并发简单请求</li>
+<li><strong>传输快</strong>      零拷贝基于NIO  在JDK 1.4引入的NIO提供了机遇Channel与Buffer的IO方式，它可以使用Native函数库直接分配堆外的内存，然后使用</li>
+<li><strong>封装好</strong></li>
+</ol>
+<p>Netty是一款基于NIO（Nonblocking I/O，非阻塞IO）开发的网络通信框架，对比于BIO（Blocking I/O，阻塞IO），他的并发性能得到了很大提高，两张图让你了解BIO和NIO的区别：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1089449-546a563c9822ce16.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/548" alt=""></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1089449-9eebe781fba495fd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/572" alt=""></p>
+<p>从这两图可以看出，NIO的单线程能处理连接的数量比BIO要高出很多，而为什么单线程能处理更多的连接呢？原因就是图二中出现的<code>Selector</code>。<br>当一个连接建立之后，他有两个步骤要做，第一步是接收完客户端发过来的全部数据，第二步是服务端处理完请求业务之后返回response给客户端。NIO和BIO的区别主要是在第一步。<br>在BIO中，等待客户端发数据这个过程是阻塞的，这样就造成了一个线程只能处理一个请求的情况，而机器能支持的最大线程数是有限的，这就是为什么BIO不能支持高并发的原因。<br>而NIO中，当一个Socket建立好之后，Thread并不会阻塞去接受这个Socket，而是将这个请求交给Selector，Selector会不断的去遍历所有的Socket，一旦有一个Socket建立完成，他会通知Thread，然后Thread处理完数据再返回给客户端——<strong>这个过程是不阻塞的</strong>，这样就能让一个Thread处理更多的请求了。<br>下面两张图是基于BIO的处理流程和netty的处理流程，辅助你理解两种方式的差别：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1089449-6377fd47256970ef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/584" alt=""></p>
+<p>​                                                            <u>BIO的处理流程</u></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1089449-78814cbb3acc30bd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/525" alt="img"></p>
+<p>​                                                            <u>NIO的处理流程</u></p>
+<blockquote>
+<p>Selector<br>selector允许单线程处理多个Channel。如果你的应用打开了多个连接（通道），但每个连接的流量都很低，使用<br>Selector就会很方便。</p>
+</blockquote>
+<p><img src="https://img-blog.csdnimg.cn/20190414080321260.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTE3NzA4NzU=,size_16,color_FFFFFF,t_70" alt=""></p>
+<blockquote>
+<p>要使用Selector，Selector需要注册Channel，然后调用他的Select（）方法，这个方法会一直阻塞到某个注册的通道有事件就绪。一旦这个方向返回，线程就可以处理这些事件，事件的例子有如新链接进来，数据接受等</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 一.Nio中传输中的两个重要的概念：</span></span><br><span class="line"><span class="comment"> *                          Buffer：缓冲区 负责数据的存储（读写）</span></span><br><span class="line"><span class="comment"> *                          channel :通道  代表了数据源与IO节点 (文件，网络socket) 之间的链接，负责传输Buffer</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *      二。 java.nio.Buffer</span></span><br><span class="line"><span class="comment"> *                          |--------ByteBuffer</span></span><br><span class="line"><span class="comment"> *                          |--------CharBuffer</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *                          |--------ShortBuffer</span></span><br><span class="line"><span class="comment"> *                          |--------IntBuffer</span></span><br><span class="line"><span class="comment"> *                          |--------LongBuffer</span></span><br><span class="line"><span class="comment"> *                          |--------FloatBuffer</span></span><br><span class="line"><span class="comment"> *                          |--------DoubleBuffer</span></span><br><span class="line"><span class="comment">            底层对应类型的数组</span></span><br><span class="line"><span class="comment"> xxxBuffer的常用属性</span></span><br><span class="line"><span class="comment"> capacity  ：容量</span></span><br><span class="line"><span class="comment"> limit   ： 限制  默认的时候与capation 的值一样</span></span><br><span class="line"><span class="comment"> position  ： 位置</span></span><br><span class="line"><span class="comment"> mark   ： 标记</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span></span>&#123;</span><br><span class="line">	java.nio.ByteBuffer buffer= java.nio.ByteBuffer.allocate(<span class="number">10</span>);<span class="comment">//底层为10的byte数组</span></span><br><span class="line">	System.out.println(buffer.capacity());<span class="comment">//10</span></span><br><span class="line">	System.out.println(buffer.limit());<span class="comment">//10</span></span><br><span class="line">	System.out.println(buffer.position());<span class="comment">//0</span></span><br><span class="line">	System.out.println(buffer.mark());<span class="comment">//java.nio.HeapByteBuffer[pos=0 lim=10 cap=10]</span></span><br><span class="line">	</span><br><span class="line">	buffer.put(<span class="string">"ddd"</span>.getBytes());</span><br><span class="line">	System.out.println(buffer.capacity());<span class="comment">//10</span></span><br><span class="line">	System.out.println(buffer.limit());<span class="comment">//10</span></span><br><span class="line">	System.out.println(buffer.position());<span class="comment">//3</span></span><br><span class="line">	System.out.println(buffer.mark());<span class="comment">//每一次put都会将值移动一次</span></span><br><span class="line"><span class="comment">//java.nio.HeapByteBuffer[pos=3 lim=10 cap=10]</span></span><br><span class="line">	</span><br><span class="line">	buffer.flip();<span class="comment">//将存入数据模式变成取出数据模式 已经存入的数据posstion又变成0，从头继续读</span></span><br><span class="line">	System.out.println(buffer.capacity());<span class="comment">//10</span></span><br><span class="line">	System.out.println(buffer.limit());<span class="comment">//3</span></span><br><span class="line">	System.out.println(buffer.position());<span class="comment">//0</span></span><br><span class="line">	System.out.println(buffer.mark());<span class="comment">//java.nio.HeapByteBuffer[pos=0 lim=3 cap=10]</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">//buffer.get();//每get一次position+1</span></span><br><span class="line">	System.out.println((<span class="keyword">char</span>)buffer.get());<span class="comment">//d</span></span><br><span class="line">	System.out.println((<span class="keyword">char</span>)buffer.get());<span class="comment">//d</span></span><br><span class="line">	System.out.println(buffer.capacity());<span class="comment">//10</span></span><br><span class="line">	System.out.println(buffer.limit());<span class="comment">//3</span></span><br><span class="line">	System.out.println(buffer.position());<span class="comment">//2</span></span><br><span class="line">	System.out.println(buffer.mark());<span class="comment">//java.nio.HeapByteBuffer[pos=2 lim=3 cap=10]</span></span><br><span class="line">	</span><br><span class="line">	buffer.rewind();<span class="comment">//重置position</span></span><br><span class="line">	buffer.clear();<span class="comment">//清空回到用户初始状态</span></span><br><span class="line">	</span><br><span class="line">	System.out.println((<span class="keyword">char</span>)buffer.get());<span class="comment">//d</span></span><br><span class="line">	System.out.println(buffer.position());<span class="comment">//1</span></span><br><span class="line">	System.out.println(buffer.limit());<span class="comment">//10</span></span><br><span class="line">	System.out.println(buffer.mark());<span class="comment">//java.nio.HeapByteBuffer[pos=1 lim=10 cap=10]</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Channel<br>channel 表示IO源与目标节点打开的链接<br>channel本身不能存数据，只能与buffer交互 ,JavaNIO的通道类似流，但有些不同<br>即可以从通道中读取数据，又可以写数据到通道，但流的读写通常是单向的<br>通道可以异步地读写,通道中的数据总要先读到一个Buffer，或者总是要从一个Buffer中写入</p>
+<p>Channel的实现<br>主要实现类：</p>
+<p>java.nio.channels.Channel:</p>
+<ul>
+<li>FileChannel:适用于本地数据传输 ，从文件中读写数据。</li>
+<li>SocketChannel：能通过TCP读写网络中的数据。</li>
+<li>ServerSocketChannel：用于TCP中的网络传输的服务器端 ,可以监听新进来的TCP连接，像*Web服务器那样。对每一个新进来的连接都会创建一个SocketChannel。</li>
+<li>DatagramChannel：能通过UDP读写网络中的数据。</li>
+</ul>
+</blockquote>
+<h1 id="Netty为什么传输快"><a href="#Netty为什么传输快" class="headerlink" title="Netty为什么传输快"></a>Netty为什么传输快</h1><p>Netty的传输快其实也是依赖了NIO的一个特性——<strong><em>零拷贝</em></strong>。我们知道，Java的内存有堆内存、栈内存和字符串常量池等等，其中堆内存是占用内存空间最大的一块，也是Java对象存放的地方，一般我们的数据如果需要从IO读取到堆内存，中间需要经过Socket缓冲区，也就是说一个数据会被拷贝两次才能到达他的的终点，如果数据量大，就会造成不必要的资源浪费。<br>Netty针对这种情况，使用了NIO中的另一大特性——零拷贝，当他需要接收数据的时候，他会在堆内存之外开辟一块内存，数据就直接从IO读到了那块内存中去，在netty里面通过ByteBuf可以直接对这些数据进行直接操作，从而加快了传输速度。<br>下两图就介绍了两种拷贝方式的区别，摘自<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fl-cn-zerocopy1%2Findex.html" target="_blank" rel="noopener">Linux 中的零拷贝技术，第 1 部分</a></p>
+<p><img src="https:////upload-images.jianshu.io/upload_images/1089449-014c9e07d56e4be5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/481" alt="img"></p>
+<p>​                                                            <u>传统数据</u></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1089449-50e5aa5eec7e86cc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/554" alt="img"></p>
+<p>​                                                                <u>零拷贝</u></p>
+<h1 id="为什么说Netty封装好？"><a href="#为什么说Netty封装好？" class="headerlink" title="为什么说Netty封装好？"></a>为什么说Netty封装好？</h1><p>从代码量上来看，Netty就已经秒杀传统Socket编程了，但是这一部分博大精深，仅仅贴几个代码岂能说明问题，在这里给大家介绍一下Netty的一些重要概念，让大家更理解Netty。</p>
+<ul>
+<li>Channel<br>数据传输流，与channel相关的概念有以下四个，上一张图让你了解netty里面的Channel。</li>
+</ul>
+<p><img src="https:////upload-images.jianshu.io/upload_images/1089449-afd9e14197e1ef11.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/751" alt="img"></p>
+<p>Channel一览</p>
+<p>​        1.Channel，表示一个连接，可以理解为每一个请求，就是一个Channel。</p>
+<p>​        <strong>2.ChannelHandler</strong>，核心处理业务就在这里，用于处理业务请求。</p>
+<p>​        3.ChannelHandlerContext，用于传输业务数据。</p>
+<p>​        4.ChannelPipeline，用于保存处理过程需要用到的ChannelHandler和ChannelHandlerContext。</p>
+<ul>
+<li>ByteBuf</li>
+<li>ByteBuf是一个存储字节的容器，最大特点就是<strong>使用方便</strong>，它既有自己的读索引和写索引，方便你对整段字节缓存进行读写，也支持get/set，方便你对其中每一个字节进行读写，他的数据结构如下图所示：</li>
+</ul>
+<p><img src="https:////upload-images.jianshu.io/upload_images/1089449-b1ec677f253b692a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/558" alt="img"></p>
+<p>ByteBuf数据结构</p>
+<p>他有三种使用模式：</p>
+<ol>
+<li><p>Heap Buffer 堆缓冲区<br>堆缓冲区是ByteBuf最常用的模式，他将数据存储在堆空间。</p>
+</li>
+<li><p>Direct Buffer 直接缓冲区</p>
+<p>直接缓冲区是ByteBuf的另外一种常用模式，他的内存分配都不发生在堆，jdk1.4引入的nio的ByteBuffer类允许jvm通过本地方法调用分配内存，这样做有两个好处</p>
+<ul>
+<li>通过免去中间交换的内存拷贝, 提升IO处理速度; 直接缓冲区的内容可以驻留在垃圾回收扫描的堆区以外。</li>
+<li>DirectBuffer 在 -XX:MaxDirectMemorySize=xxM大小限制下, 使用 Heap 之外的内存, GC对此”无能为力”,也就意味着规避了在高负载下频繁的GC过程对应用线程的中断影响.</li>
+</ul>
+</li>
+</ol>
+
       
 
       
@@ -423,15 +527,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">-hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">NIO</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Netty</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">-hexo</a>
               </li>
              
               <li class="article-tag-list-item">
